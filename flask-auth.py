@@ -1,20 +1,33 @@
+# coding: utf-8
+
 from flask import Flask, session, redirect, url_for, escape, request
-from authentication import requires_authentication
+from authentication import RequiresAuthentication
 
 app = Flask(__name__)
 app.debug = True
 
 @app.route('/')
+@RequiresAuthentication(['fiscal'])
 def index():
     if 'username' in session:
-        return 'Logged in as %s' % escape(session['username'])
+        return 'logado como %s' % escape(session['username'])
     return 'Nao ta autenticado ok?'
+
+
+@app.route('/erro_funcao')
+@RequiresAuthentication()
+def erro_funcao():
+    return 'A funcao "' + session['funcao'] + '" nao pode acessar a pagina.'
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         session['username'] = request.form['username']
         session['funcao'] = request.form['funcao']
+        print session['funcao']
+        print session['username']
+
         return redirect(url_for('index'))
     return '''
         <form action="" method="post">
@@ -26,12 +39,12 @@ def login():
 
 @app.route('/logout')
 def logout():
-    # remove the username from the session if it's there
     session.pop('username', None)
     session.pop('funcao', None)
+
     return redirect(url_for('index'))
 
-# set the secret key.  keep this really secret:
+
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 
 

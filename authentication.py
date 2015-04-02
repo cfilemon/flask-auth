@@ -1,32 +1,37 @@
+# -*- coding: utf-8 -*-
 from flask import session, redirect, url_for
+from functools import wraps
+
+DEFAULT_CALLBACK_URL = 'login'
+DEFAULT_CALLBACK_PERMISSIONS_URL = 'erro_funcao'
 
 
-class requires_authentication(object):
-
-    def __init__(self, permissions=None, callback_permissions=None, callback='index'):
+class RequiresAuthentication(object):
+    def __init__(self, permissions=None, callback_permissions=DEFAULT_CALLBACK_PERMISSIONS_URL, callback=DEFAULT_CALLBACK_URL):
         self.permissions = permissions
         self.callback = callback
         self.callback_permissions = callback_permissions
 
     def __call__(self, f):
-        def wrapped_f():
-            if self.is_authenticated():
-                if self.require_permissions() and session.funcao in self.permissions:
-                    print "pode entrar, tem a permissao"
-                    #return redirect(url_for(self.callback_permissions))
-                    return f
+        @wraps(f)
+        def authentication_decorated(*args, **kwargs):
+            if is_authenticated():
+                if self.require_special_permissions():
+                    if session['funcao'] in self.permissions:
+                        return f(*args, **kwargs)
+                    else:
+                        return redirect(url_for(self.callback_permissions))
                 else:
-                    print "requer permissao mas o usuario nao a tem"
-                    return f
+                    return f(*args, **kwargs)
             else:
-                print "requer que esteja logado e nao esta"
-                #return redirect(url_for(self.callback))
-                return f
+                return redirect(url_for(self.callback))
 
-        return wrapped_f
+        return authentication_decorated
 
-    def is_authenticated(self):
-        return 'username' in session
-
-    def require_permissions(self):
+    def require_special_permissions(self):
         return self.permissions is not None and self.callback_permissions is not None
+
+
+def is_authenticated():
+    return 'username' in session
+
