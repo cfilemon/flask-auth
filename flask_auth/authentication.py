@@ -4,7 +4,7 @@ from flask_auth import callback_method_name, callback_permissions_method_name, i
 from functools import wraps
 
 class RequiresAuthentication(object):
-    def __init__(self, required_permissions=None, callback_permissions=callback_permissions_method_name, callback=callback_method_name, authenticated=is_authenticated, permission=current_permission):
+    def __init__(self, authenticated, callback, permission=None, required_permissions=None, callback_permissions=None):
         self.required_permissions = required_permissions
         self.permission = permission
         self.callback = callback
