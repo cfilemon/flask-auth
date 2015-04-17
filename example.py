@@ -1,13 +1,14 @@
 # coding: utf-8
+import flask_auth.authentication
 
 from flask import Flask, session, redirect, url_for, escape, request
-from authentication import RequiresAuthentication
+from flask_auth.authentication import RequiresAuthentication
 
 app = Flask(__name__)
 app.debug = True
 
 @app.route('/')
-@RequiresAuthentication(['fiscal'])
+@RequiresAuthentication()
 def index():
     if 'username' in session:
         return 'logado como %s' % escape(session['username'])

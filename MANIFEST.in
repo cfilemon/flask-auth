@@ -1,0 +1,9 @@
+include README.rst
+
+global-include flask_auth *
+recursive-include flask_auth *
+
+exclude .gitignore
+exclude .gitreview
+
+global-exclude *.pyc

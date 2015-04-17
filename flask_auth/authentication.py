@@ -1,15 +1,10 @@
 # -*- coding: utf-8 -*-
 from flask import session, redirect, url_for
+from flask_auth import callback_method_name, callback_permissions_method_name, is_authenticated, current_permission
 from functools import wraps
 
-CALLBACK_METHOD_NAME = 'login'
-CALLBACK_PERMISSIONS_METHOD_NAME = 'erro_funcao'
-AUTHENTICATED_FUNCTION = True
-CURRENT_PERMISSION_FUNCTION = []
-
-
 class RequiresAuthentication(object):
-    def __init__(self, required_permissions=None, callback_permissions=CALLBACK_PERMISSIONS_METHOD_NAME, callback=CALLBACK_METHOD_NAME, authenticated=AUTHENTICATED_FUNCTION, permission=CURRENT_PERMISSION_FUNCTION):
+    def __init__(self, required_permissions=None, callback_permissions=callback_permissions_method_name, callback=callback_method_name, authenticated=is_authenticated, permission=current_permission):
         self.required_permissions = required_permissions
         self.permission = permission
         self.callback = callback
@@ -33,7 +28,7 @@ class RequiresAuthentication(object):
         return authentication_decorated
 
     def require_special_permissions(self):
-        return self.permissions is not None and self.callback_permissions is not None
+        return self.required_permissions is not None and self.callback_permissions is not None
 
 
 
