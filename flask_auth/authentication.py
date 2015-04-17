@@ -13,7 +13,7 @@ class RequiresAuthentication(object):
     def __call__(self, f):
         @wraps(f)
         def authentication_decorated(*args, **kwargs):
-            if self.authenticated:
+            if self.authenticated():
                 if self.require_special_permissions():
                     if self.permission in self.required_permissions:
                         return f(*args, **kwargs)
