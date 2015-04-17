@@ -1,8 +1,8 @@
 from setuptools import setup
  
 setup(
-    name = 'flash_auth',
-    packages = ['flash_auth'],
+    name = 'flask_auth',
+    packages = ['flask_auth'],
     version = '0.0.1',
     description = 'Flask Authentication.',
     author='Analytics UFCG',
