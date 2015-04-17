@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from flask import session, redirect, url_for
-from flask_auth import callback_method_name, callback_permissions_method_name, is_authenticated, current_permission
 from functools import wraps
 
 class RequiresAuthentication(object):
